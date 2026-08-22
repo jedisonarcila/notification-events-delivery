@@ -1,0 +1,33 @@
+spring:
+  application:
+    name: notification-events-delivery
+  threads:
+    virtual:
+      enabled: true
+  cloud:
+    aws:
+      region:
+        static: us-east-1
+      # Sin credenciales fijadas aquí a propósito: Spring Cloud AWS cae a
+      # `DefaultCredentialsProvider` (env vars, IRSA/EKS, credenciales de
+      # contenedor en ECS, instance profile en EC2, ~/.aws/credentials...),
+      # que prueba cada mecanismo según el entorno de despliegue real. Forzar
+      # `credentials.instance-profile: true` aquí limitaría la resolución
+      # únicamente a metadata de EC2 y rompería en ECS/EKS/local.
+
+notifier:
+  raw-events-queue: raw-events
+  deliveries-queue: deliveries
+  subscriptions-table: subscriptions
+  notification-events-table: notification_events
+  http-connect-timeout: 5s
+  http-read-timeout: 10s
+  secret-prefix: cobre/webhook-hmac/
+  secret-cache-ttl: 10m
+  metrics-namespace: notification-events-delivery
+
+management:
+  cloudwatch:
+    metrics:
+      export:
+        namespace: ${notifier.metrics-namespace}
