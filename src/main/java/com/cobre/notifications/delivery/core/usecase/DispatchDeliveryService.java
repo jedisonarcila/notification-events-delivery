@@ -18,7 +18,7 @@ import java.util.Optional;
  */
 public class DispatchDeliveryService implements DispatchDeliveryUseCase {
 
-    private static final int MAX_ATTEMPTS = 6;
+    private static final int MAX_ATTEMPTS = 3;
     private static final long OUTCOME_RETENTION_DAYS = 90;
 
     private final WebhookClient webhookClient;

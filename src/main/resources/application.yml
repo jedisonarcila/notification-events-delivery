@@ -16,10 +16,10 @@ spring:
       # únicamente a metadata de EC2 y rompería en ECS/EKS/local.
 
 notifier:
-  raw-events-queue: raw-events
-  deliveries-queue: deliveries
-  subscriptions-table: subscriptions
-  notification-events-table: notification_events
+  raw-events-queue: ${QUEUE_RAW_URL:raw-events}
+  deliveries-queue: ${QUEUE_DELIVERIES_URL:deliveries}
+  subscriptions-table: ${TABLE_SUBS:subscriptions}
+  notification-events-table: ${TABLE_EVENTS:notification_events}
   http-connect-timeout: 5s
   http-read-timeout: 10s
   secret-prefix: cobre/webhook-hmac/

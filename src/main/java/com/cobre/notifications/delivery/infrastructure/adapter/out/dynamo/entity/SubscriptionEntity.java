@@ -1,5 +1,6 @@
 package com.cobre.notifications.delivery.infrastructure.adapter.out.dynamo.entity;
 
+import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbAttribute;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbBean;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbPartitionKey;
 import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortKey;
@@ -7,6 +8,10 @@ import software.amazon.awssdk.enhanced.dynamodb.mapper.annotations.DynamoDbSortK
 /**
  * Fila de la tabla {@code subscriptions}: PK=client_id,
  * SK=event_type#subscription_id (data-model.md).
+ *
+ * Los @DynamoDbAttribute alinean los nombres de atributo con la tabla real
+ * (snake_case, creada por Terraform): client_id, sk. Sin ellos, el Enhanced
+ * Client usaría camelCase (clientId, sortKey) y el Query/PutItem fallaría.
  */
 @DynamoDbBean
 public class SubscriptionEntity {
@@ -27,6 +32,7 @@ public class SubscriptionEntity {
     }
 
     @DynamoDbPartitionKey
+    @DynamoDbAttribute("client_id")
     public String getClientId() {
         return clientId;
     }
@@ -36,6 +42,7 @@ public class SubscriptionEntity {
     }
 
     @DynamoDbSortKey
+    @DynamoDbAttribute("sk")
     public String getSortKey() {
         return sortKey;
     }
@@ -44,6 +51,7 @@ public class SubscriptionEntity {
         this.sortKey = sortKey;
     }
 
+    @DynamoDbAttribute("subscription_id")
     public String getSubscriptionId() {
         return subscriptionId;
     }
@@ -52,6 +60,7 @@ public class SubscriptionEntity {
         this.subscriptionId = subscriptionId;
     }
 
+    @DynamoDbAttribute("event_type")
     public String getEventType() {
         return eventType;
     }
@@ -60,6 +69,7 @@ public class SubscriptionEntity {
         this.eventType = eventType;
     }
 
+    @DynamoDbAttribute("webhook_url")
     public String getWebhookUrl() {
         return webhookUrl;
     }
@@ -68,6 +78,7 @@ public class SubscriptionEntity {
         this.webhookUrl = webhookUrl;
     }
 
+    @DynamoDbAttribute("active")
     public boolean isActive() {
         return active;
     }
