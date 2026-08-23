@@ -1,0 +1,37 @@
+# Perfil para correr el worker localmente contra LocalStack (docker), en vez
+# de AWS real. Activar con --spring.profiles.active=local (o
+# SPRING_PROFILES_ACTIVE=local). Requiere LocalStack levantado en el puerto
+# 4566 por defecto:
+#
+#   docker run --rm -p 4566:4566 -e SERVICES=sqs,dynamodb,secretsmanager localstack/localstack
+#
+# (cloudwatch no hace falta: las métricas se desactivan en este perfil, ver
+# management.cloudwatch.metrics.export.enabled abajo)
+#
+# Las colas se auto-crean al arrancar (QueueNotFoundStrategy=CREATE por
+# defecto), pero las tablas DynamoDB SÍ hay que crearlas a mano antes de
+# probar (ver quickstart.md), por ejemplo:
+#
+#   aws --endpoint-url=http://localhost:4566 dynamodb create-table ...
+
+spring:
+  cloud:
+    aws:
+      credentials:
+        instance-profile: false
+        access-key: test
+        secret-key: test
+      region:
+        static: us-east-1
+      sqs:
+        endpoint: http://localhost:4566
+      dynamodb:
+        endpoint: http://localhost:4566
+      secretsmanager:
+        endpoint: http://localhost:4566
+
+management:
+  cloudwatch:
+    metrics:
+      export:
+        enabled: false
