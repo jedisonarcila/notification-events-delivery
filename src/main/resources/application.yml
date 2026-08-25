@@ -8,6 +8,13 @@ spring:
     aws:
       region:
         static: us-east-1
+      sqs:
+        listener:
+          # Mensajes en vuelo por cola: el techo real de entregas concurrentes,
+          # aplicado por el SemaphoreBackPressureHandler del contenedor. Con
+          # listeners asíncronos sobre virtual threads los hilos de plataforma
+          # solo encolan, así que subirlo no cuesta hilos del SO.
+          max-concurrent-messages: ${SQS_MAX_CONCURRENT:100}
       # Sin credenciales fijadas aquí a propósito: Spring Cloud AWS cae a
       # `DefaultCredentialsProvider` (env vars, IRSA/EKS, credenciales de
       # contenedor en ECS, instance profile en EC2, ~/.aws/credentials...),
